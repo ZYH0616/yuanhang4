@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远航 · 商务翻译原型</title>
+    <!-- 引入 Inter 字体 & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafd;
+            color: #1f2937;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 延续远航品牌的微光背景 */
+        .bg-glow {
+            background: radial-gradient(circle at 90% 10%, rgba(37, 99, 235, 0.03) 0%, transparent 35%),
+                        radial-gradient(circle at 10% 90%, rgba(6, 182, 212, 0.03) 0%, transparent 35%);
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* 简易导航条 (与主页风格一致) */
+        .prototype-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e3c72, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .logo i {
+            color: #2563eb;
+            font-size: 1.8rem;
+            -webkit-text-fill-color: #2563eb;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        /* 页面主标题 */
+        .page-header {
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #0b2a5a;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 i {
+            color: #2563eb;
+            background: rgba(37,99,235,0.1);
+            padding: 0.6rem;
+            border-radius: 18px;
+        }
+
+        /* 语言选择栏 */
+        .lang-selector {
+            background: white;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f2f5;
+            margin-bottom: 2rem;
+        }
+
+        .lang-pair {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 2;
+            min-width: 280px;
+        }
+
+        .lang-select {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f3f4f6;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .lang-select:hover {
+            border-color: #2563eb;
+            background: #edf2ff;
+        }
+
+        .lang-select i {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .lang-select span {
+            font-weight: 500;
+        }
+
+        .swap-btn {
+            background: white;
+            border: 1px solid #d1d5db;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .swap-btn:hover {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .dialect-option {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #4b5563;
+        }
+
+        .dialect-option select {
+            background: #f3f4f6;
+            border: 1px solid #e2e4e8;
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* 翻译区域 (上下布局, 注重输入) */
+        .translation-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .input-panel, .output-panel {
+            background: white;
+            border-radius: 32px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px -8px rgba(0,34,64,0.05);
+            border: 1px solid #f0f4f9;
+            transition: box-shadow 0.2s;
+        }
+
+        .input-panel:focus-within, .output-panel:hover {
+            box-shadow: 0 12px 28px -10px rgba(37,99,235,0.15);
+            border-color: rgba(37,99,235,0.2);
+        }
+
+        .panel-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #4b5563;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .text-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+            padding: 0.5rem 0;
+            min-height: 100px;
+            line-height: 1.6;
+            background: transparent;
+        }
+
+        .text-input::placeholder {
+            color: #b3b9c4;
+        }
+
+        .voice-btn {
+            background: #f3f4f6;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            color: #2563eb;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .voice-btn:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .output-content {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .translated-text {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #0f172a;
+            background: #f9fafc;
+            padding: 1rem 1.2rem;
+            border-radius: 24px;
+            min-height: 80px;
+        }
+
+        .play-btn {
+            background: #eff6ff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            color: #2563eb;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* 快捷历史 & 收藏夹 */
+        .bottom-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .history-panel, .favorites-panel {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #f0f2f5;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #0b2a5a;
+            margin-bottom: 1.2rem;
+        }
+
+        .panel-title i {
+            color: #2563eb;
+        }
+
+        .history-list, .favorite-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .history-item, .favorite-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1rem;
+            background: #f9fafc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover, .favorite-item:hover {
+            border-color: #2563eb;
+            background: #f1f5ff;
+        }
+
+        .item-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .item-content i {
+            color: #9ca3af;
+            width: 20px;
+        }
+
+        .item-lang {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .favorite-icon {
+            color: #fbbf24;
+            cursor: pointer;
+        }
+
+        .favorite-icon:hover {
+            color: #f59e0b;
+        }
+
+        /* 原型提示条 */
+        .proto-note {
+            background: #eef4ff;
+            border-radius: 30px;
+            padding: 0.4rem 1.2rem;
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #1e40af;
+            border: 1px dashed #2563eb;
+            margin: 1rem 0 0.5rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 700px) {
+            .bottom-panels {
+                grid-template-columns: 1fr;
+            }
+            .lang-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .lang-pair {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body class="bg-glow">
+    <div class="container">
+        <!-- 原型提示 -->
+        <div class="proto-note">
+            <i class="fas fa-mouse-pointer"></i> 商务翻译 · 高保真原型 (点击元素体验演示交互)
+        </div>
+
+        <!-- 简化导航 (与远航品牌统一) -->
+        <nav class="prototype-nav">
+          <div class="logo">
+        <i class="fas fa-ship"></i> 远航 · Overseas
+        </div>
+        <a href="index.html" class="back-link" style="text-decoration: none;">
+        <i class="fas fa-arrow-left"></i> 返回主页
+        </a>
+       </nav>
+
+        <!-- 页面主标题 -->
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-language"></i> 商务翻译
+            </h1>
+            <span style="color:#6b7280; font-size:0.95rem;">超拟人语音 · 支持阿语/俄语/泰语方言</span>
+        </div>
+
+        <!-- 顶部语言选择区 -->
+        <div class="lang-selector">
+            <div class="lang-pair">
+                <!-- 源语言 -->
+                <div class="lang-select" onclick="alert('选择源语言 (演示)')">
+                    <span>中文</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <!-- 互换按钮 -->
+                <div class="swap-btn" onclick="alert('互换源语言和目标语言 (演示)')">
+                    <i class="fas fa-arrow-right-arrow-left"></i>
+                </div>
+                <!-- 目标语言 -->
+                <div class="lang-select" onclick="alert('选择目标语言 (演示)')">
+                    <span>英语</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="dialect-option">
+                <i class="fas fa-map-pin" style="color:#2563eb;"></i>
+                <select onchange="alert('切换方言: ' + this.value)">
+                    <option>标准</option>
+                    <option>阿拉伯语 (埃及)</option>
+                    <option>俄语 (莫斯科)</option>
+                    <option>泰语 (曼谷)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 翻译核心区域 -->
+        <div class="translation-area">
+            <!-- 输入面板 (支持文本/语音) -->
+            <div class="input-panel">
+                <div class="panel-label">
+                    <i class="fas fa-pencil-alt" style="color:#2563eb;"></i> 输入文本
+                </div>
+                <div class="input-wrapper">
+                    <textarea class="text-input" placeholder="请输入要翻译的文本..." rows="3">We need to discuss the contract details.</textarea>
+                    <button class="voice-btn" onclick="alert('语音输入 (演示)')">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <!-- 附加提示：支持语音输入 -->
+                <div style="margin-top:0.6rem; color:#9aa3b4; font-size:0.8rem;">
+                    <i class="fas fa-info-circle"></i> 点击麦克风使用语音输入
+                </div>
+            </div>
+
+            <!-- 输出面板 (翻译结果 + 播放按钮) -->
+            <div class="output-panel">
+                <div class="panel-label">
+                    <i class="fas fa-globe" style="color:#2563eb;"></i> 翻译结果 (英语)
+                </div>
+                <div class="output-content">
+                    <div class="translated-text">
+                        We need to discuss the contract details.
+                    </div>
+                    <button class="play-btn" onclick="alert('播放超拟人语音合成 (演示)')">
+                        <i class="fas fa-volume-high"></i>
+                    </button>
+                </div>
+                <!-- 试听提示 -->
+                <div style="margin-top:0.6rem; color:#9aa3b4; font-size:0.8rem; display:flex; gap:1rem;">
+                    <span><i class="fas fa-wave-square"></i> 超拟人音色 · 女声</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部快捷翻译历史 & 收藏夹 -->
+        <div class="bottom-panels">
+            <!-- 历史记录 -->
+            <div class="history-panel">
+                <div class="panel-title">
+                    <i class="fas fa-clock"></i> 快捷翻译历史
+                </div>
+                <div class="history-list">
+                    <div class="history-item" onclick="alert('查看历史翻译: 合同条款 (演示)')">
+                        <div class="item-content">
+                            <i class="fas fa-file-lines"></i>
+                            <div>
+                                <div>We need to sign the NDA</div>
+                                <div class="item-lang">中文 → 英语</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#d1d5db;"></i>
+                    </div>
+                    <div class="history-item" onclick="alert('查看历史翻译: 报价单 (演示)')">
+                        <div class="item-content">
+                            <i class="fas fa-file-lines"></i>
+                            <div>
+                                <div>请发送最新的报价单</div>
+                                <div class="item-lang">中文 → 俄语</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#d1d5db;"></i>
+                    </div>
+                    <div class="history-item" onclick="alert('查看历史翻译: 物流信息 (演示)')">
+                        <div class="item-content">
+                            <i class="fas fa-file-lines"></i>
+                            <div>
+                                <div>货物何时抵达曼谷？</div>
+                                <div class="item-lang">中文 → 泰语</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#d1d5db;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏夹 -->
+            <div class="favorites-panel">
+                <div class="panel-title">
+                    <i class="fas fa-star" style="color:#fbbf24;"></i> 收藏夹
+                </div>
+                <div class="favorite-list">
+                    <div class="favorite-item" onclick="alert('查看收藏: 商务问候 (演示)')">
+                        <div class="item-content">
+                            <i class="fas fa-bookmark"></i>
+                            <div>
+                                <div>Nice to meet you</div>
+                                <div class="item-lang">英语 · 商务</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-star favorite-icon" onclick="event.stopPropagation(); alert('取消收藏 (演示)')"></i>
+                    </div>
+                    <div class="favorite-item" onclick="alert('查看收藏: 合同条款 (演示)')">
+                        <div class="item-content">
+                            <i class="fas fa-bookmark"></i>
+                            <div>
+                                <div>兹约定如下条款</div>
+                                <div class="item-lang">中文 · 法律</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-star favorite-icon" onclick="event.stopPropagation(); alert('取消收藏 (演示)')"></i>
+                    </div>
+                    <div class="favorite-item" onclick="alert('查看收藏: 价格询问 (演示)')">
+                        <div class="item-content">
+                            <i class="fas fa-bookmark"></i>
+                            <div>
+                                <div>What is your best price?</div>
+                                <div class="item-lang">英语 · 采购</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-star favorite-icon" onclick="event.stopPropagation(); alert('取消收藏 (演示)')"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部留白 + 页脚简单版权 (远航风格) -->
+        <footer style="display: flex; justify-content: space-between; padding: 2.5rem 0 1.5rem; border-top: 1px solid #edf2f7; margin-top: 2rem; color: #6b7280;">
+            <div>© 2025 远航 · Overseas 原型演示</div>
+            <div style="display: flex; gap: 2rem;">
+                <a href="#" onclick="alert('服务条款 (演示)')" style="text-decoration: none; color: #6b7280;">服务条款</a>
+                <a href="#" onclick="alert('隐私政策 (演示)')" style="text-decoration: none; color: #6b7280;">隐私政策</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 添加简单的交互脚本：所有可点击元素弹出功能提示 (已经内联 onclick，这里不再重复) -->
+    <script>
+        // 额外确保所有带有 .lang-select, .swap-btn, .voice-btn, .play-btn, .history-item 等都已自带 onclick
+        // 但为了全面，也可以使用事件委托，但现有 onclick 已满足要求。
+        // 该脚本仅用于演示说明
+        console.log('商务翻译原型已加载');
+    </script>
+</body>
+</html>

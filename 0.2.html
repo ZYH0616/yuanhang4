@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远航 · AI营销工坊原型</title>
+    <!-- 字体 & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f9fbfe;
+            color: #1f2937;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* 远航特色微光背景 + 创意彩色光晕 */
+        .creative-glow {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 125, 85, 0.03) 0%, transparent 35%),
+                radial-gradient(circle at 90% 70%, rgba(37, 99, 235, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 30% 80%, rgba(245, 158, 11, 0.03) 0%, transparent 30%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* 导航 */
+        .prototype-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e3c72, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .logo i {
+            color: #2563eb;
+            font-size: 1.8rem;
+            -webkit-text-fill-color: #2563eb;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        /* 页面主标题 */
+        .page-header {
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #0b2a5a;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 i {
+            color: #f97316; /* 创意橙色 */
+            background: rgba(249, 115, 22, 0.1);
+            padding: 0.6rem;
+            border-radius: 18px;
+        }
+
+        .page-header .subhead {
+            color: #6b7280;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.6);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        /* 选项卡 */
+        .tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin: 2rem 0 2rem;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.6);
+            padding: 0.5rem;
+            border-radius: 60px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(145deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 6px 14px rgba(37,99,235,0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #eef2ff;
+            color: #1e40af;
+        }
+
+        /* 面板通用样式 */
+        .panel {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 48px;
+            padding: 2.5rem 2rem;
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.1);
+            margin-bottom: 2.5rem;
+            display: none;
+        }
+
+        .panel.active-panel {
+            display: block;
+        }
+
+        /* 创意点缀 */
+        .panel h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #0b2a5a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .panel h2 i {
+            color: #f97316;
+        }
+
+        /* 语音合成区域 */
+        .upload-area {
+            background: #f2f5fc;
+            border-radius: 32px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px dashed #b3c7f0;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #2563eb;
+            background: #e9f0ff;
+        }
+
+        .upload-area i {
+            font-size: 2.5rem;
+            color: #2563eb;
+            margin-bottom: 0.8rem;
+        }
+
+        .sample-list {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .sample-item {
+            background: white;
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+            border: 1px solid #eef2f6;
+        }
+
+        .sample-item i {
+            color: #f97316;
+        }
+
+        .lang-generate {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .lang-select {
+            background: #f3f4f6;
+            border: 1px solid #e2e4e8;
+            border-radius: 40px;
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            outline: none;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(145deg, #2563eb, #1d4ed8);
+            border: none;
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 16px rgba(37,99,235,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(37,99,235,0.3);
+        }
+
+        /* 波形示意 */
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 60px;
+            margin-top: 1rem;
+        }
+
+        .wave-bar {
+            width: 12px;
+            background: linear-gradient(to top, #2563eb, #7aa3ff);
+            border-radius: 20px;
+            flex: 1;
+            height: calc(30% + 10px);
+            animation: wave 1.5s infinite alternate ease-in-out;
+        }
+
+        .wave-bar:nth-child(2) { height: 45px; animation-delay: 0.1s; background: #f97316; }
+        .wave-bar:nth-child(3) { height: 25px; animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { height: 55px; animation-delay: 0.2s; background: #fbbf24; }
+        .wave-bar:nth-child(5) { height: 35px; animation-delay: 0.4s; }
+        .wave-bar:nth-child(6) { height: 48px; animation-delay: 0.15s; background: #60a5fa; }
+        .wave-bar:nth-child(7) { height: 30px; animation-delay: 0.25s; }
+
+        @keyframes wave {
+            0% { transform: scaleY(0.6); }
+            100% { transform: scaleY(1.2); }
+        }
+
+        /* 文案生成卡片 */
+        .product-input {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .product-input textarea {
+            flex: 2;
+            border: 1px solid #e5e7eb;
+            border-radius: 30px;
+            padding: 1rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .product-input select {
+            flex: 1;
+            border-radius: 40px;
+            padding: 0 1.5rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .generated-copy {
+            background: #f3f7ff;
+            border-radius: 32px;
+            padding: 1.8rem;
+            border-left: 6px solid #f97316;
+            position: relative;
+        }
+
+        .generated-copy p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #1f2a44;
+        }
+
+        .copy-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #9ca3af;
+            cursor: pointer;
+        }
+
+        /* 视频脚本 */
+        .script-display {
+            background: #1f2937;
+            color: #f3f4f6;
+            border-radius: 32px;
+            padding: 2rem;
+            font-family: 'Inter', monospace;
+            white-space: pre-wrap;
+            border: 1px solid #374151;
+        }
+
+        /* 文化适配卡片 */
+        .culture-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .culture-card {
+            background: #fff5e9;
+            border-radius: 32px;
+            padding: 1.8rem;
+            border: 1px solid #ffdebc;
+        }
+
+        .culture-card h3 {
+            display: flex;
+            gap: 0.5rem;
+            color: #b45309;
+            margin-bottom: 1rem;
+        }
+
+        .symbol-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .symbol-tag {
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .taboo-card {
+            background: #ffe7e7;
+            border-color: #fecaca;
+        }
+
+        .taboo-card h3 {
+            color: #b91c1c;
+        }
+
+        .warning-item {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        /* 原型提示条 */
+        .proto-note {
+            background: #eef4ff;
+            border-radius: 30px;
+            padding: 0.4rem 1.2rem;
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #1e40af;
+            border: 1px dashed #2563eb;
+            margin: 1rem 0 0.5rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 700px) {
+            .culture-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="creative-glow">
+    <div class="container">
+        <!-- 原型提示 -->
+        <div class="proto-note">
+            <i class="fas fa-mouse-pointer"></i> AI营销工坊 · 高保真原型 (点击任何可交互元素体验演示)
+        </div>
+
+        <!-- 导航 -->
+        <nav class="prototype-nav">
+            <div class="logo">
+                <i class="fas fa-ship"></i> 远航 · Overseas
+            </div>
+            <a href="index.html" style="text-decoration: none;">
+                <div class="back-link">
+                    <i class="fas fa-arrow-left"></i> 返回主页
+                </div>
+            </a>
+        </nav>
+
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-robot" style="color:#f97316;"></i> AI营销工坊
+            </h1>
+            <span class="subhead">超拟人语音 · 本土化内容 · 创意无限</span>
+        </div>
+
+        <!-- 选项卡 -->
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-tts"><i class="fas fa-wave-square"></i> 语音合成</button>
+            <button class="tab-btn" id="tab-copy"><i class="fas fa-pen"></i> 文案生成</button>
+            <button class="tab-btn" id="tab-script"><i class="fas fa-video"></i> 视频脚本</button>
+            <button class="tab-btn" id="tab-culture"><i class="fas fa-globe"></i> 文化适配</button>
+        </div>
+
+        <!-- 语音合成面板 (默认激活) -->
+        <div id="panel-tts" class="panel active-panel">
+            <h2><i class="fas fa-microphone-alt"></i> 超拟人语音合成</h2>
+            <!-- 上传声音样本 -->
+            <div class="upload-area" onclick="alert('上传声音样本 (演示)')">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p style="font-weight: 500;">点击或拖拽上传声音样本 (支持 mp3/wav)</p>
+                <p style="color: #6b7280; font-size:0.9rem;">至少10秒清晰语音</p>
+            </div>
+
+            <!-- 样本列表 -->
+            <div class="sample-list">
+                <div class="sample-item" onclick="alert('选择样本: 我的声音 (演示)')">
+                    <i class="fas fa-check-circle" style="color:#10b981;"></i> 我的声音
+                </div>
+                <div class="sample-item" onclick="alert('选择样本: 英语样本 (演示)')">
+                    <i class="fas fa-file-audio"></i> 英语样本
+                </div>
+                <div class="sample-item" onclick="alert('选择样本: 阿拉伯语样本 (演示)')">
+                    <i class="fas fa-file-audio"></i> 阿语样本
+                </div>
+                <div class="sample-item" onclick="alert('添加新样本 (演示)')">
+                    <i class="fas fa-plus-circle"></i> 添加
+                </div>
+            </div>
+
+            <!-- 目标语言选择 & 生成按钮 -->
+            <div class="lang-generate">
+                <select class="lang-select" onchange="alert('切换目标语言: ' + this.value)">
+                    <option>选择目标语言</option>
+                    <option>英语 (美国)</option>
+                    <option>阿拉伯语 (埃及)</option>
+                    <option>俄语 (俄罗斯)</option>
+                    <option>泰语 (泰国)</option>
+                    <option>西班牙语 (墨西哥)</option>
+                </select>
+                <button class="generate-btn" onclick="alert('生成语音 (演示)')">
+                    <i class="fas fa-magic"></i> 生成语音
+                </button>
+            </div>
+
+            <!-- 波形图示意 -->
+            <div style="margin-top:2rem;">
+                <p style="margin-bottom:0.8rem; color:#374151;"><i class="fas fa-chart-line"></i> 生成语音波形预览</p>
+                <div class="waveform">
+                    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文案生成面板 -->
+        <div id="panel-copy" class="panel">
+            <h2><i class="fas fa-pen-fancy"></i> 多语种营销文案</h2>
+            <div class="product-input">
+                <textarea placeholder="输入产品描述（例如：一款智能节能空调，主打静音快速制冷，适合家庭使用）">智能节能空调，静音快速制冷，适合家庭使用</textarea>
+                <select onchange="alert('选择目标市场: ' + this.value)">
+                    <option>中东</option>
+                    <option>东南亚</option>
+                    <option>拉美</option>
+                    <option>欧洲</option>
+                </select>
+                <button class="generate-btn" style="flex:0 0 auto;" onclick="alert('生成文案 (演示)')">生成</button>
+            </div>
+            <div class="generated-copy">
+                <i class="fas fa-copy copy-icon" onclick="alert('复制文案 (演示)')"></i>
+                <p>❝ 静享清凉，节能先锋！全新智能空调专为家庭设计，超静音运行，快速制冷，助您度过炎热夏季。智能节能技术，电费减半，舒适加倍。立即升级您的家居体验！ ❞</p>
+                <div style="display:flex; gap:0.5rem; margin-top:1rem; color:#f97316;">
+                    <span><i class="fas fa-tag"></i> 阿拉伯语版</span>
+                    <span><i class="fas fa-tag"></i> 英语版</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频脚本面板 -->
+        <div id="panel-script" class="panel">
+            <h2><i class="fas fa-film"></i> AI视频脚本生成</h2>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
+                <input type="text" placeholder="输入视频主题 (例如：开箱展示智能空调)" style="flex:2; border-radius:40px; border:1px solid #e5e7eb; padding:0.8rem 1.5rem;">
+                <button class="generate-btn" onclick="alert('生成脚本 (演示)')">生成脚本</button>
+            </div>
+            <div class="script-display">
+                <i class="fas fa-lightbulb" style="color:#fbbf24; margin-right:0.5rem;"></i> 
+                【场景1】 家庭客厅，孩子热得满头大汗，妈妈启动空调。<br>
+                【场景2】 特写：空调面板显示26℃，声音几乎为零。<br>
+                【场景3】 字幕：“静音制冷，不打扰你的美梦”。<br>
+                【场景4】 月末电费单对比，使用前$80，使用后$40。<br>
+                【画外音】 “智能节能空调，一半电费，双倍舒适。”<br>
+            </div>
+        </div>
+
+        <!-- 文化适配面板 -->
+        <div id="panel-culture" class="panel">
+            <h2><i class="fas fa-heart"></i> 本地化文化适配建议</h2>
+            <div style="margin-bottom:1.5rem; display:flex; gap:1rem; align-items:center;">
+                <span>当前市场：</span>
+                <select class="lang-select" style="width:auto;" onchange="alert('切换市场: ' + this.value)">
+                    <option>中东 (沙特)</option>
+                    <option>东南亚 (泰国)</option>
+                    <option>拉美 (墨西哥)</option>
+                </select>
+            </div>
+            <div class="culture-grid">
+                <!-- 文化符号 -->
+                <div class="culture-card">
+                    <h3><i class="fas fa-star"></i> 文化符号</h3>
+                    <div class="symbol-list">
+                        <span class="symbol-tag"><i class="fas fa-camel" style="color:#b45309;"></i> 骆驼</span>
+                        <span class="symbol-tag"><i class="fas fa-mosque"></i> 清真寺</span>
+                        <span class="symbol-tag"><i class="fas fa-palette"></i> 阿拉伯书法</span>
+                        <span class="symbol-tag"><i class="fas fa-coffee"></i> 阿拉伯咖啡</span>
+                    </div>
+                    <p style="margin-top:1rem; color:#4b5563;">广告中使用绿色/金色更受欢迎，避免使用猪、酒等图案。</p>
+                </div>
+                <!-- 禁忌提示 -->
+                <div class="culture-card taboo-card">
+                    <h3><i class="fas fa-exclamation-triangle"></i> 禁忌提示</h3>
+                    <div class="warning-item">
+                        <i class="fas fa-ban" style="color:#dc2626;"></i> <span>避免左手递物（视为不洁）</span>
+                    </div>
+                    <div class="warning-item">
+                        <i class="fas fa-ban" style="color:#dc2626;"></i> <span>女性形象需穿着得体，避免暴露</span>
+                    </div>
+                    <div class="warning-item">
+                        <i class="fas fa-ban" style="color:#dc2626;"></i> <span>不要使用十字架或六芒星图案</span>
+                    </div>
+                    <div class="warning-item">
+                        <i class="fas fa-ban" style="color:#dc2626;"></i> <span>避免酒精/赌场相关元素</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 (同主页风格) -->
+        <footer style="display: flex; justify-content: space-between; padding: 2rem 0 1.5rem; border-top: 1px solid #edf2f7; color: #6b7280;">
+            <div>© 2025 远航 · Overseas 原型演示</div>
+            <div style="display: flex; gap: 2rem;">
+                <a href="#" onclick="alert('服务条款 (演示)')" style="text-decoration: none; color: #6b7280;">服务条款</a>
+                <a href="#" onclick="alert('隐私政策 (演示)')" style="text-decoration: none; color: #6b7280;">隐私政策</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 选项卡切换脚本 -->
+    <script>
+        const tabTTS = document.getElementById('tab-tts');
+        const tabCopy = document.getElementById('tab-copy');
+        const tabScript = document.getElementById('tab-script');
+        const tabCulture = document.getElementById('tab-culture');
+        const panelTTS = document.getElementById('panel-tts');
+        const panelCopy = document.getElementById('panel-copy');
+        const panelScript = document.getElementById('panel-script');
+        const panelCulture = document.getElementById('panel-culture');
+        const tabs = [tabTTS, tabCopy, tabScript, tabCulture];
+        const panels = [panelTTS, panelCopy, panelScript, panelCulture];
+
+        function setActiveTab(index) {
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                    panels[i].classList.add('active-panel');
+                } else {
+                    tab.classList.remove('active');
+                    panels[i].classList.remove('active-panel');
+                }
+            });
+        }
+
+        tabTTS.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveTab(0);
+            alert('切换到语音合成 (演示)');
+        });
+        tabCopy.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveTab(1);
+            alert('切换到文案生成 (演示)');
+        });
+        tabScript.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveTab(2);
+            alert('切换到视频脚本 (演示)');
+        });
+        tabCulture.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveTab(3);
+            alert('切换到文化适配 (演示)');
+        });
+
+        // 额外为所有可交互元素附加演示弹窗 (很多已内联onclick，但为了避免遗漏，可以用事件委托，但内联已覆盖)
+        // 为面板内一些未加onclick的元素补上演示 (例如波形条点击无意义，跳过)
+        // 已经足够
+    </script>
+</body>
+</html>
